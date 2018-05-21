@@ -2,7 +2,7 @@
 /**
  * Plugin Name: URL Information
  * Version: 1.0
- * Description: Adds support for the url-info tag, which retrieves information from the resource's HTTP headers.
+ * Description: Adds support for the urlinfo tag, which retrieves information from the resource's HTTP headers.
  * Author: Timothe Litt
  * notPlugin URI: https://wikiworld.litts.net/plugins/url-info
  * License: GPLv2 or later
@@ -13,9 +13,9 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 /* See readme for user documentation */
 
-/* url-info shortcode handler */
+/* urlinfo shortcode handler */
 
-function url_info_tag( $attrs, $content=null, $name ) {
+function urlinfo_tag( $attrs, $content=null, $name ) {
     /* default and filter attributes */
     $attrs = shortcode_atts(
           array(
@@ -729,10 +729,14 @@ function url_info_tag( $attrs, $content=null, $name ) {
     $pfx = html_entity_decode(  $attrs['prefix'] );
     $sfx = html_entity_decode( $attrs['suffix'] );
 
+    /* Avoid user confusion by allowing debug only in preview mode */
+
+    $debug = $attrs['debug'] && is_preview();
+
     /* Content is required */
 
     if( $content == null ) {
-        if( $attrs['debug'] ) {
+        if( $debug ) {
             return "$pfx$name: no content$sfx";
         }
         return '';
@@ -742,7 +746,7 @@ function url_info_tag( $attrs, $content=null, $name ) {
 
     if( !( preg_match( '/\bhref=[\']([^\']+)[\']/i', $content, $refs, 0, 0 ) ||
            preg_match( '/\bhref=["]([^"]+)["]/i', $content, $refs, 0, 0 ) ) ) {
-        if( $attrs['debug'] ) {
+        if( $debug ) {
             return "$content$pfx$name: no URL in " .
                    htmlspecialchars( $content ) . $sfx;
         }
@@ -757,7 +761,7 @@ function url_info_tag( $attrs, $content=null, $name ) {
 
     for( $i = 0; $i < 5; $i++ ) {
         if( !($h = wp_get_http_headers( $ref )) ) {
-            if( $attrs['debug'] ) {
+            if( $debug ) {
                 return "$content$pfx$name: No response for " .
                        htmlspecialchars( $ref ) . $sfx;
             }
@@ -820,7 +824,7 @@ function url_info_tag( $attrs, $content=null, $name ) {
                 }
                 break;
             }
-            if( $attrs['debug'] ) {
+            if( $debug ) {
                 $result .= "$pfx$name: no $hdr in response for " .
                            htmlspecialchars( $ref ) . "$default$sfx";
             } else {
@@ -876,7 +880,7 @@ function url_info_tag( $attrs, $content=null, $name ) {
             }
             $value = $dv->format( $attrs['format'] );
         } else { /* Invalid format or date value */
-            if( $attrs['debug'] ) {
+            if( $debug ) {
                 $value .= "$name:$value<pre>" .
                            print_r( DateTime::getLastErrors(), true ) .
                           '</pre>';
@@ -890,5 +894,5 @@ function url_info_tag( $attrs, $content=null, $name ) {
 
 /* Register shortcode */
 
-add_shortcode( 'url-info', 'url_info_tag' );
+add_shortcode( 'urlinfo', 'urlinfo_tag' );
 ?>

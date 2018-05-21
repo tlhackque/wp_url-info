@@ -1,19 +1,20 @@
 === url-info ===
-Contributors: TimotheLitt
-Tags: HTTP,HEAD,URL,Last-Modified
+Contributors: tlhackque
+Tags: HTTP,HEAD,URL,atributes
 Requires at least: 4.9.0
 Tested up to: 4.9.6
 Requires PHP: 5.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Stable tag: 1.0
 
-Provide information from HTTP headers returned by a URL
+Adds support for the urlinfo shortcode, which retrieves information from the HTTP headers returned from a resource.
 
 == Description ==
-Provides the urlinfo shortcode, which displays various items from the HTTP headers from a URL
+Provides the urlinfo shortcode, which displays various items from the HTTP headers provided by a URL
 
 Usage:
-    [url-info options]text[/url-info]
+    [urlinfo options]text[/urlinfo]
     options:
        debug="0"            True to enable debugging
        item="mtime"         Space-separated list of header values to retrieve
@@ -41,15 +42,31 @@ the shortcode.
 
 If a value can't be obtained, an empty string is normally returned.
 However, if the debug option is true, an error message will appear.
+The prefix and suffix will be applied in either case.  If multiple
+items were requested and the resource is inaccessible, only a single
+item is returned.
 
-Note that each occurance of [url-info] will cause a HEAD network
-transaction.  This may slow page loads.  Also, note that this transaction
-is initiated by the server, not by the user.  Therefore, any access
-controls need to be carefully considered.
+The debug output can be lengthy and is likely to be confusing to
+end users.  It is active only in preview mode and ignored for
+published pages.
+
+Note that each occurance of [urlinfo] will cause a HEAD network
+transaction.  This may slow page loads.  However, multiple items
+retrieved by a single [urlinfo] occurance use only one HEAD
+transaction.
+
+Also, note that this transaction is initiated by the server, not by
+the user.  Therefore, any access controls need to be carefully considered.
 
 == Installation ==
-Install the usual way.
+1. Create /wp-content/plugins/url-info/
+2. Upload url-info.php and readme.txt to /wp-content/plugins/url-info/url-info.php
+3. Activate the plugin through the 'Plugins' menu in WordPress
 
-== Comment ==
-See https://generatewp.com/plugin-readme/ for generator
+== Support ==
+https://github.com/tlhackque/wp_url-info/issues
 
+== Changelog ==
+
+= 1.0 =
+* Initial version.
