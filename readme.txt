@@ -2,11 +2,11 @@
 Contributors: tlhackque
 Tags: HTTP,HEAD,URL,atributes
 Requires at least: 4.9.0
-Tested up to: 4.9.6
+Tested up to: 5.7.2
 Requires PHP: 5.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Stable tag: 1.0
+Stable tag: 1.1
 
 Adds support for the urlinfo shortcode, which retrieves information from the HTTP headers returned from a resource.
 
@@ -30,7 +30,8 @@ Usage:
        prefix="<br />"      HTML to insert before value
        suffix=''            HTML to insert after value
        timezone=(from php.ini) Timezone used to display dates
-    text contains a link referencing the URL of a remote resource to be queried
+    text contains a WordPress link referencing the URL of a remote resource to be queried
+    This will be something like <a href="...">label</a>.  The URL is extracted from the href.
 
 The shortcode returns the text, followed by (for each item requested)
 the prefix, value, and suffix.
@@ -70,3 +71,6 @@ https://github.com/tlhackque/wp_url-info/issues
 
 = 1.0 =
 * Initial version.
+= 1.1 =
+* Remove any attributes (such as ;CHARSET=) from Content-Type values.
+
