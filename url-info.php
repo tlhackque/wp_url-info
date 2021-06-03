@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: URL Information
- * Version: 1.0
+ * Version: 1.1
  * Description: Adds support for the urlinfo tag, which retrieves information from the resource's HTTP headers.
  * Author: Timothe Litt
  * notPlugin URI: https://wikiworld.litts.net/plugins/url-info
@@ -839,18 +839,24 @@ function urlinfo_tag( $attrs, $content=null, $name ) {
         if( !$isdate ) {
             /* Non-date. Handle any value mapping for item */
 
-            if( preg_match( '/^type-(\w+)/i', $item, $refs, 0, 0 ) &&
-                isset( $types[$value] ) ) {
-                switch( strtolower( $refs[1] ) ) {
-        case 'name':
-                    $value = $types[$value][0];
-                    break;
-        case 'ext':
-                    $value = $types[$value][1];
-                    break;
-        case 'desc':
-                    $value = $types[$value][2];
-                    break;
+            if( preg_match( '/^type-(\w+)/i', $item, $refs, 0, 0 ) ) {
+                if( strtolower( $refs[1] == 'name' ) ) {
+                    if( preg_match( '/^([^;]+);/', $value, $vrefs, 0, 0 ) ) {
+                        $value = $vrefs[1];
+                    }
+                }
+                if( isset( $types[$value] ) ) {
+                    switch( strtolower( $refs[1] ) ) {
+            case 'name':
+                        $value = $types[$value][0];
+                        break;
+            case 'ext':
+                        $value = $types[$value][1];
+                        break;
+            case 'desc':
+                        $value = $types[$value][2];
+                        break;
+                    }
                 }
             }
             $result .= "$pfx$value$sfx";
